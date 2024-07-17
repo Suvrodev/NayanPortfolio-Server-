@@ -56,11 +56,12 @@ async function run() {
     /**
      * Database and client start
      */
-
-    const userCollection = client.db("aportfolioDB").collection("users");
     const homeServiceCollection = client
       .db("aportfolioDB")
       .collection("homeService");
+    const userCollection = client.db("aportfolioDB").collection("users");
+    const projectsCollection = client.db("aportfolioDB").collection("projects");
+    const gigsCollection = client.db("aportfolioDB").collection("gigs");
     /**
      * Database and client end
      */
@@ -102,9 +103,27 @@ async function run() {
       console.log(email);
       const query = { email: email };
       const result = await userCollection.findOne(query);
-      res.send(result);
+      if (result) {
+        res.json(result);
+      } else {
+        res.json({ message: "Email does not exist" });
+      }
     });
     ///Get User specific data end
+
+    //Projects get api start
+    app.get("/projects", async (req, res) => {
+      const result = await projectsCollection.find().toArray();
+      res.send(result);
+    });
+    //Projects get api end
+
+    //Projects get api start
+    app.get("/gigs", async (req, res) => {
+      const result = await gigsCollection.find().toArray();
+      res.send(result);
+    });
+    //Projects get api end
 
     /**
      * api work end
