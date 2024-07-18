@@ -149,7 +149,7 @@ async function run() {
     });
     //Project delete api end
 
-    //Project delete api start
+    //Project update api start
     app.patch("/projects/:id", async (req, res) => {
       const id = req.params.id;
       console.log(id);
@@ -163,7 +163,7 @@ async function run() {
       const result = await projectsCollection.updateOne(filter, updatedProject);
       res.send(result);
     });
-    //Project delete api end
+    //Project update api end
 
     //Gigs get api start
     app.get("/gigs", async (req, res) => {
@@ -171,6 +171,50 @@ async function run() {
       res.send(result);
     });
     //Gigs get api end
+
+    //gigs get specific api start
+    app.get("/gigs/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await gigsCollection.findOne(query);
+      res.send(result);
+    });
+    //gigs get specific api end
+
+    //Gigs post api start
+    app.post("/gigs", async (req, res) => {
+      const gotGigs = req.body;
+      console.log(gotGigs);
+      const result = await gigsCollection.insertOne(gotGigs);
+      res.send(result);
+    });
+    //Gigs post api end
+
+    //Gigs delete api start
+    app.delete("/gigs/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: new ObjectId(id) };
+      const result = await gigsCollection.deleteOne(query);
+      res.send(result);
+    });
+    //Gigs delete api end
+
+    //Project update api start
+    app.patch("/gigs/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const getProjectInfo = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updatedProject = {
+        $set: {
+          ...getProjectInfo,
+        },
+      };
+      const result = await gigsCollection.updateOne(filter, updatedProject);
+      res.send(result);
+    });
+    //Project update api end
 
     //Portfolio get api start
     app.get("/portfolios", async (req, res) => {
