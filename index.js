@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -62,6 +62,9 @@ async function run() {
     const userCollection = client.db("aportfolioDB").collection("users");
     const projectsCollection = client.db("aportfolioDB").collection("projects");
     const gigsCollection = client.db("aportfolioDB").collection("gigs");
+    const portfolioCollection = client
+      .db("aportfolioDB")
+      .collection("portfolios");
     /**
      * Database and client end
      */
@@ -118,12 +121,63 @@ async function run() {
     });
     //Projects get api end
 
-    //Projects get api start
+    //Projects get specific api start
+    app.get("/projects/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await projectsCollection.findOne(query);
+      res.send(result);
+    });
+    //Projects get specific api end
+
+    //Project post api start
+    app.post("/projects", async (req, res) => {
+      const gotProjects = req.body;
+      console.log(gotProjects);
+      const result = await projectsCollection.insertOne(gotProjects);
+      res.send(result);
+    });
+    //Project post api end
+
+    //Project delete api start
+    app.delete("/projects/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: new ObjectId(id) };
+      const result = await projectsCollection.deleteOne(query);
+      res.send(result);
+    });
+    //Project delete api end
+
+    //Project delete api start
+    app.patch("/projects/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const getProjectInfo = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updatedProject = {
+        $set: {
+          ...getProjectInfo,
+        },
+      };
+      const result = await projectsCollection.updateOne(filter, updatedProject);
+      res.send(result);
+    });
+    //Project delete api end
+
+    //Gigs get api start
     app.get("/gigs", async (req, res) => {
       const result = await gigsCollection.find().toArray();
       res.send(result);
     });
-    //Projects get api end
+    //Gigs get api end
+
+    //Portfolio get api start
+    app.get("/portfolios", async (req, res) => {
+      const result = await portfolioCollection.find().toArray();
+      res.send(result);
+    });
+    //Portfolio get api end
 
     /**
      * api work end
