@@ -200,7 +200,7 @@ async function run() {
     });
     //Gigs delete api end
 
-    //Project update api start
+    //gigs update api start
     app.patch("/gigs/:id", async (req, res) => {
       const id = req.params.id;
       console.log(id);
@@ -214,7 +214,7 @@ async function run() {
       const result = await gigsCollection.updateOne(filter, updatedProject);
       res.send(result);
     });
-    //Project update api end
+    //Gigs update api end
 
     //Portfolio get api start
     app.get("/portfolios", async (req, res) => {
@@ -222,6 +222,53 @@ async function run() {
       res.send(result);
     });
     //Portfolio get api end
+
+    //Portfolio get specific api start
+    app.get("/portfolios/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await portfolioCollection.findOne(query);
+      res.send(result);
+    });
+    //Portfolio get specific api end
+
+    //Portfolio post api start
+    app.post("/portfolios", async (req, res) => {
+      const gotGigs = req.body;
+      console.log(gotGigs);
+      const result = await portfolioCollection.insertOne(gotGigs);
+      res.send(result);
+    });
+    //Portfolio post api end
+
+    //Portfolio delete api start
+    app.delete("/portfolios/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: new ObjectId(id) };
+      const result = await portfolioCollection.deleteOne(query);
+      res.send(result);
+    });
+    //Portfolio delete api end
+
+    //Portfolio update api start
+    app.patch("/portfolios/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const getProjectInfo = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updatedProject = {
+        $set: {
+          ...getProjectInfo,
+        },
+      };
+      const result = await portfolioCollection.updateOne(
+        filter,
+        updatedProject
+      );
+      res.send(result);
+    });
+    //Portfolio update api end
 
     /**
      * api work end
