@@ -62,6 +62,7 @@ async function run() {
     const userCollection = client.db("aportfolioDB").collection("users");
     const projectsCollection = client.db("aportfolioDB").collection("projects");
     const gigsCollection = client.db("aportfolioDB").collection("gigs");
+    const serviceCollection = client.db("aportfolioDB").collection("service");
     const portfolioCollection = client
       .db("aportfolioDB")
       .collection("portfolios");
@@ -216,14 +217,14 @@ async function run() {
     });
     //Gigs update api end
 
-    //Portfolio get api start
+    //portfolios get api start-1
     app.get("/portfolios", async (req, res) => {
       const result = await portfolioCollection.find().toArray();
       res.send(result);
     });
-    //Portfolio get api end
+    //portfolios get api end
 
-    //Portfolio get specific api start
+    //Portfolio get specific api start-2
     app.get("/portfolios/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -232,7 +233,7 @@ async function run() {
     });
     //Portfolio get specific api end
 
-    //Portfolio post api start
+    //Portfolio post api start-3
     app.post("/portfolios", async (req, res) => {
       const gotGigs = req.body;
       console.log(gotGigs);
@@ -241,7 +242,7 @@ async function run() {
     });
     //Portfolio post api end
 
-    //Portfolio delete api start
+    //Portfolio delete api start-4
     app.delete("/portfolios/:id", async (req, res) => {
       const id = req.params.id;
       console.log(id);
@@ -251,7 +252,7 @@ async function run() {
     });
     //Portfolio delete api end
 
-    //Portfolio update api start
+    //Portfolio update api start-5
     app.patch("/portfolios/:id", async (req, res) => {
       const id = req.params.id;
       console.log(id);
@@ -269,6 +270,57 @@ async function run() {
       res.send(result);
     });
     //Portfolio update api end
+
+    //service get api start-1
+    app.get("/service", async (req, res) => {
+      const result = await serviceCollection.find().toArray();
+      res.send(result);
+    });
+    //service get api end
+
+    //service get specific api start-2
+    app.get("/service/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await serviceCollection.findOne(query);
+      res.send(result);
+    });
+    //service get specific api end
+
+    //service post api start-3
+    app.post("/service", async (req, res) => {
+      const gotGigs = req.body;
+      console.log(gotGigs);
+      const result = await serviceCollection.insertOne(gotGigs);
+      res.send(result);
+    });
+    //service post api end
+
+    //service delete api start-4
+    app.delete("/service/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: new ObjectId(id) };
+      const result = await portfolioCollection.deleteOne(query);
+      res.send(result);
+    });
+    //Portfolio delete api end
+
+    //service update api start-5
+    app.patch("/service/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const getProjectInfo = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updatedProject = {
+        $set: {
+          ...getProjectInfo,
+        },
+      };
+      const result = await serviceCollection.updateOne(filter, updatedProject);
+      res.send(result);
+    });
+    //service update api end
 
     /**
      * api work end
