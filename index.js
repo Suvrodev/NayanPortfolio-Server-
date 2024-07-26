@@ -7,7 +7,13 @@ const we = require("./Data/we.json");
 require("dotenv").config();
 
 //Middleware
-app.use(cors());
+const corsConfig = {
+  origin: "*",
+  credentials: true,
+  methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+};
+
+app.use(cors(corsConfig));
 app.use(express.json());
 
 app.get("/", (req, res) => {
