@@ -70,13 +70,13 @@ async function run() {
      * Database and client end
      */
 
-    // Home Service api
+    // Home Service api -1
     app.get("/homeservice", async (req, res) => {
       const result = await homeServiceCollection.find().toArray();
       res.send(result);
     });
 
-    //post user start
+    //post user start -1
     app.post("/user", async (req, res) => {
       console.log("Come");
       const user = req.body;
@@ -94,14 +94,14 @@ async function run() {
     });
     //post user end
 
-    ///Get all User start
+    ///Get all User start -2
     app.get("/user", async (req, res) => {
       const result = await userCollection.find().toArray();
       res.send(result);
     });
     ///Get all User end
 
-    ///Get Admin User start
+    ///Get Admin User start -3
     app.get("/user/admin", async (req, res) => {
       const query = { role: "admin" };
       const result = await userCollection.find(query).toArray();
@@ -109,7 +109,7 @@ async function run() {
     });
     ///Get Admin User end
 
-    ///Get User specific data start
+    ///Get User specific data start -4
     app.get("/user/:email", async (req, res) => {
       const email = req.params.email;
       console.log(email);
@@ -123,14 +123,40 @@ async function run() {
     });
     ///Get User specific data end
 
-    //Projects get api start
+    //User delete api start-5
+    app.delete("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const query = { _id: new ObjectId(id) };
+      const result = await userCollection.deleteOne(query);
+      res.send(result);
+    });
+    //User delete api end
+
+    //User update api start-6
+    app.patch("/user/:id", async (req, res) => {
+      const id = req.params.id;
+      console.log(id);
+      const getProjectInfo = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updatedProject = {
+        $set: {
+          ...getProjectInfo,
+        },
+      };
+      const result = await userCollection.updateOne(filter, updatedProject);
+      res.send(result);
+    });
+    //User update api end
+
+    //Projects get api start-1
     app.get("/projects", async (req, res) => {
       const result = await projectsCollection.find().toArray();
       res.send(result);
     });
     //Projects get api end
 
-    //Projects get specific api start
+    //Projects get specific api start-2
     app.get("/projects/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
@@ -139,7 +165,7 @@ async function run() {
     });
     //Projects get specific api end
 
-    //Project post api start
+    //Project post api start-3
     app.post("/projects", async (req, res) => {
       const gotProjects = req.body;
       console.log(gotProjects);
@@ -148,7 +174,7 @@ async function run() {
     });
     //Project post api end
 
-    //Project delete api start
+    //Project delete api start-4
     app.delete("/projects/:id", async (req, res) => {
       const id = req.params.id;
       console.log(id);
@@ -158,7 +184,7 @@ async function run() {
     });
     //Project delete api end
 
-    //Project update api start
+    //Project update api start-5
     app.patch("/projects/:id", async (req, res) => {
       const id = req.params.id;
       console.log(id);
