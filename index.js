@@ -94,12 +94,20 @@ async function run() {
     });
     //post user end
 
-    ///Get User start
+    ///Get all User start
     app.get("/user", async (req, res) => {
       const result = await userCollection.find().toArray();
       res.send(result);
     });
-    ///Get User end
+    ///Get all User end
+
+    ///Get Admin User start
+    app.get("/user/admin", async (req, res) => {
+      const query = { role: "admin" };
+      const result = await userCollection.find(query).toArray();
+      res.send(result);
+    });
+    ///Get Admin User end
 
     ///Get User specific data start
     app.get("/user/:email", async (req, res) => {
@@ -301,7 +309,7 @@ async function run() {
       const id = req.params.id;
       console.log(id);
       const query = { _id: new ObjectId(id) };
-      const result = await portfolioCollection.deleteOne(query);
+      const result = await serviceCollection.deleteOne(query);
       res.send(result);
     });
     //Portfolio delete api end
